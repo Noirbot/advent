@@ -1,5 +1,4 @@
 use std::thread;
-use std::sync::{Arc, Mutex};
 
 #[derive(Debug)]
 struct Generator {
@@ -33,42 +32,39 @@ fn check_tail(val1: u128, val2: u128) -> u64 {
 }
 
 fn main() {
-  let mut gen1 = Generator {factor: 16807, value: 634, divisor: 2147483647};
-  
-  let mutex_gen1 = Arc::new(Mutex::new(gen1));
-
-  let mut gen2 = Generator {factor: 48271, value: 301, divisor: 2147483647};
-  
-  let mutex_gen2 = Arc::new(Mutex::new(gen2));
-
   let mut matches: u64 = 0;
   
-  for iter in 0..5_000_000 {
-  //  println!("on iter: {}", iter);
-    let mutex_gen1_clone = mutex_gen1.clone();
-    let handle1 = thread::spawn(move || {
-      let mut gen = mutex_gen1_clone.lock().unwrap();
-      loop {
+  let handle1 = thread::spawn(|| {
+    let mut gen = Generator {factor: 16807, value: 634, divisor: 2147483647};
+    let mut values = Vec::with_capacity(5_000_000);
+    for _iter in 0..5_000_000 {
+      values.push(loop {
         if gen.generate() % 4 == 0 {
-          break;
+          break gen.value;
         }
-      }
-    });
+      })
+    }
+    return values;
+  });
 
-    let mutex_gen2_clone = mutex_gen2.clone();
-    let handle2 = thread::spawn(move || {
-      let mut gen = mutex_gen2_clone.lock().unwrap();
-      loop {
+  let handle2 = thread::spawn(move || {
+    let mut gen = Generator {factor: 48271, value: 301, divisor: 2147483647};
+    let mut values = Vec::with_capacity(5_000_000);
+    for _iter in 0..5_000_000 {
+      values.push(loop {
         if gen.generate() % 8 == 0 {
-          break;
+          break gen.value;
         }
-      }
-    });
+      })
+    }
+    return values;
+  });
 
-    handle1.join().unwrap();
-    handle2.join().unwrap();
+  let vals1 = handle1.join().unwrap();
+  let vals2 = handle2.join().unwrap();
 
-    matches += check_tail(mutex_gen1.lock().unwrap().value, mutex_gen2.lock().unwrap().value);
+  for iter in 0..5_000_000 {
+    matches += check_tail(vals1[iter], vals2[iter]);
   }
 
   println!("{}", matches)
