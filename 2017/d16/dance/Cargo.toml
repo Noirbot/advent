@@ -1,0 +1,6 @@
+[package]
+name = "dance"
+version = "0.1.0"
+authors = ["Perry Shuman <thenoirbot@gmail.com>"]
+
+[dependencies]
