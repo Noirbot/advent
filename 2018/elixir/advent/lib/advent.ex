@@ -15,7 +15,12 @@ defmodule Advent do
   end
 
   def day_4 do
-    Day4.part_one() |> IO.inspect(label: "Day 4, Part 1", charlists: false)
-    Day4.part_two() |> IO.inspect(label: "Day 4, Part 2", charlists: false)
+    Day4.part_one() |> IO.inspect(label: "Day 4, Part 1")
+    Day4.part_two() |> IO.inspect(label: "Day 4, Part 2")
+  end
+
+  def day_5 do
+    Day5.part_one() |> IO.inspect(label: "Day 5, Part 1")
+    Day5.part_two() |> IO.inspect(label: "Day 5, Part 2")
   end
 end
