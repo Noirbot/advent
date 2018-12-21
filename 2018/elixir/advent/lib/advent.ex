@@ -23,4 +23,9 @@ defmodule Advent do
     Day5.part_one() |> IO.inspect(label: "Day 5, Part 1")
     Day5.part_two() |> IO.inspect(label: "Day 5, Part 2")
   end
+
+  def day_6 do
+    Day6.part_one() |> IO.inspect(label: "Day 6, Part 1")
+    Day6.part_two() |> IO.inspect(label: "Day 6, Part 2")
+  end
 end
